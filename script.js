@@ -1,21 +1,13 @@
 const selectContinent = document.getElementById("selectContinent")
 
-
-fetch("https://countries.trevorblades.com", {
-  method: "POST",
-  headers: {"Content-Type": "application/json"},
-  body: JSON.stringify({
-    query: `
-      query {
-        continents {
-          name
-          code
-        }
-      }`
-  })
-})
-.then(resp => resp.json())
-.then(data => {
+queryFetch(`
+  query {
+    continents {
+      name
+      code
+    }
+  }
+`).then(data => {
   data.data.continents.forEach(continent => {
     const option = document.createElement('option')
     option.value = continent.code //works like id in this case
@@ -23,3 +15,13 @@ fetch("https://countries.trevorblades.com", {
     selectContinent.append(option)
   });
 })
+
+function queryFetch (query) {
+  return fetch("https://countries.trevorblades.com", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      query: query
+    })
+  }).then(resp => resp.json())
+}
